@@ -1,4 +1,5 @@
 local _, addon = ...
+local L = addon.L
 
 local Options = addon:NewObject("Options")
 local MoneyDB = addon:GetStorage("Money")
@@ -13,7 +14,7 @@ local function CreateReputationOptions()
 
     table.insert(args, {
         type = "description",
-        name = "Display the reputation status for the tracked factions in the tooltip of the Character Info button.",
+        name = L["Display the reputation status for the tracked factions in the tooltip of the Character Info button."],
     })
 
     table.insert(args, {
@@ -22,7 +23,7 @@ local function CreateReputationOptions()
 
     table.insert(args, {
         type = "toggle",
-        name = "Always Show Paragon Rewards",
+        name = L["Always Show Paragon Rewards"],
         descStyle = "hidden",
         width = "full",
         handler = ReputationDB,
@@ -101,20 +102,20 @@ local function BuildOptions()
 
     addon.AceOptions:RegisterOptions({
         type = "group",
-        name = "Money",
+        name = L["Money"],
         inline = true,
         handler = MoneyDB,
         args = {
             {
                 type = "description",
-                name = "Display the total money information for all characters in the tooltip of the Backpack.",
+                name = L["Display the total money information for all characters in the tooltip of the Backpack."],
             },
             {
                 type = "separator"
             },
             {
                 type = "toggle",
-                name = "Hide Connected Realms Names",
+                name = L["Hide Connected Realms Names"],
                 descStyle = "hidden",
                 width = "full",
                 get = function(self)
@@ -126,7 +127,7 @@ local function BuildOptions()
             },
             {
                 type = "toggle",
-                name = "Show All Characters",
+                name = L["Show All Characters"],
                 descStyle = "hidden",
                 width = "full",
                 get = function(self)
@@ -138,7 +139,7 @@ local function BuildOptions()
             },
             {
                 type = "description",
-                name = "\n" .. "Show only characters that has more than specified amount of |TInterface\\MoneyFrame\\UI-GoldIcon:0:0:0:-1|t money:",
+                name = L["Show only characters that has more than specified amount of money:"],
             },
             {
                 type = "input",
@@ -164,7 +165,7 @@ local function BuildOptions()
             },
             {
                 type = "execute",
-                name = "Reset Money Information",
+                name = L["Reset Money Information"],
                 descStyle = "hidden",
                 width = "double",
                 func = function(self)
@@ -176,20 +177,20 @@ local function BuildOptions()
 
     addon.AceOptions:RegisterOptions({
         type = "group",
-        name = "Guild & Communities",
+        name = L["Guild & Communities"],
         inline = true,
         handler = GuildDB,
         args = {
             {
                 type = "description",
-                name = "Display the status of your guild friends in the tooltip of the Guild & Communities button."
+                name = L["Display the status of your guild friends in the tooltip of the Guild & Communities button."]
             },
             {
                 type = "separator"
             },
             {
                 type = "range",
-                name = "Maximum Friends Online",
+                name = L["Maximum Friends Online"],
                 descStyle = "hidden",
                 width = "double",
                 step = 1,
@@ -207,20 +208,20 @@ local function BuildOptions()
 
     addon.AceOptions:RegisterOptions({
         type = "group",
-        name = "Social",
+        name = L["Social"],
         inline = true,
         handler = FriendsDB,
         args = {
             {
                 type = "description",
-                name = "Display the status of your friends in the tooltip of the Social button."
+                name = L["Display the status of your friends in the tooltip of the Social button."]
             },
             {
                 type = "separator"
             },
             {
                 type = "range",
-                name = "Maximum Friends Online",
+                name = L["Maximum Friends Online"],
                 width = "double",
                 descStyle = "hidden",
                 step = 1,
@@ -237,27 +238,27 @@ local function BuildOptions()
     })
 
     addon.AceOptions:RegisterOptions({
-        name = "Reputation",
+        name = L["Reputation"],
         type = "group",
         args = CreateReputationOptions()
     })
 
     addon.AceOptions:RegisterOptions({
         type = "group",
-        name = "Currency",
+        name = L["Currency"],
         inline = true,
         handler = CurrencyDB,
         args = {
             {
                 type = "description",
-                name = "Display the currency amount per character in the tooltip of the Currency Tab."
+                name = L["Display the currency amount per character in the tooltip of the Currency Tab."]
             },
             {
                 type = "separator"
             },
             {
                 type = "execute",
-                name = "Reset Currency Data",
+                name = L["Reset Currency Data"],
                 descStyle = "hidden",
                 width = "double",
                 func = function(self)
