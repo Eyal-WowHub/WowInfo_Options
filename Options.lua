@@ -36,8 +36,9 @@ local function CreateReputationOptions()
     })
 
     local parentName
-    for i = 1, GetNumFactions() do
-        local name, _, _, _, _, _, _, _, isHeader, _, hasRep, _, isChild, factionID = GetFactionInfo(i)
+    for i = 1, C_Reputation.GetNumFactions() do
+        local factionData = C_Reputation.GetFactionDataByIndex(i)
+        local name, isHeader, hasRep, isChild, factionID = factionData.name, factionData.isHeader, factionData.isHeaderWithRep, factionData.isChild, factionData.factionID
         if isHeader and not hasRep and not isChild then
             parentName = name
         end
