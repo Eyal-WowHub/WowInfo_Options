@@ -1,12 +1,16 @@
 local _, addon = ...
-local L = addon.L
-
 local Options = addon:NewObject("Options")
-local MoneyDB = addon:GetStorage("Money")
-local GuildDB = addon:GetStorage("Guild")
-local FriendsDB = addon:GetStorage("Friends")
-local ReputationDB = addon:GetStorage("Reputation")
-local CurrencyDB = addon:GetStorage("Currency")
+
+local WowInfo = LibStub("Addon-1.0"):GetAddon("WowInfo")
+local AceOptions = LibStub("AceOptions-1.0")
+
+local MoneyDB = WowInfo:GetStorage("Money")
+local GuildDB = WowInfo:GetStorage("Guild")
+local FriendsDB = WowInfo:GetStorage("Friends")
+local ReputationDB = WowInfo:GetStorage("Reputation")
+local CurrencyDB = WowInfo:GetStorage("Currency")
+
+local L = addon.L
 
 local function CreateReputationOptions()
     local args = {}
@@ -80,14 +84,14 @@ local function CreateReputationOptions()
 end
 
 local function BuildOptions()
-    addon.AceOptions:RegisterOptions({
+    AceOptions:RegisterOptions({
         name = "WowInfo",
         type = "group",
         args = {
             {
                 type = "description",
                 name = function()
-                    return GetAddOnMetadata("WowInfo", "Notes")
+                    return C_AddOns.GetAddOnMetadata("WowInfo", "Notes")
                 end,
                 cmdHidden = true,
             },
@@ -101,7 +105,7 @@ local function BuildOptions()
         },
     })
 
-    addon.AceOptions:RegisterOptions({
+    AceOptions:RegisterOptions({
         type = "group",
         name = L["Money"],
         inline = true,
@@ -153,7 +157,7 @@ local function BuildOptions()
                 end,
                 validate = function(info, value)
                     if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
-                        return false;
+                        return false
                     end
                     return true
                 end,
@@ -176,7 +180,7 @@ local function BuildOptions()
         }
     })
 
-    addon.AceOptions:RegisterOptions({
+    AceOptions:RegisterOptions({
         type = "group",
         name = L["Guild & Communities"],
         inline = true,
@@ -207,7 +211,7 @@ local function BuildOptions()
         }
     })
 
-    addon.AceOptions:RegisterOptions({
+    AceOptions:RegisterOptions({
         type = "group",
         name = L["Social"],
         inline = true,
@@ -238,13 +242,13 @@ local function BuildOptions()
         }
     })
 
-    addon.AceOptions:RegisterOptions({
+    AceOptions:RegisterOptions({
         name = L["Reputation"],
         type = "group",
         args = CreateReputationOptions()
     })
 
-    addon.AceOptions:RegisterOptions({
+    AceOptions:RegisterOptions({
         type = "group",
         name = L["Currency"],
         inline = true,
@@ -272,6 +276,6 @@ local function BuildOptions()
     BuildOptions = function() end
 end
 
-function Options:OnInitialize()
+function Options:OnInitializing()
     BuildOptions()
 end

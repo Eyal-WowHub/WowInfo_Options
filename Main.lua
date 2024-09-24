@@ -1,2 +1,1 @@
-local addonName, addon = ...
-addon = WowInfo:NewAddon(addonName, addon)
+local addon = LibStub("Addon-1.0"):New(...)
