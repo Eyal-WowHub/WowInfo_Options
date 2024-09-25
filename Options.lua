@@ -14,7 +14,8 @@ local L = addon.L
 
 local function CreateReputationOptions()
     local args = {}
-    local prevTable
+    local headerCollapsedState = {}
+    local headerTable, inChildHeader
 
     table.insert(args, {
         type = "description",
@@ -39,26 +40,74 @@ local function CreateReputationOptions()
         end
     })
 
+    local i = 1
+    local factionData = C_Reputation.GetFactionDataByIndex(i)
+
+    while factionData do
+        if factionData.isHeader and factionData.isCollapsed then
+            headerCollapsedState[i] = true
+            C_Reputation.ExpandFactionHeader(i)
+        end
+        i = i + 1
+        factionData = C_Reputation.GetFactionDataByIndex(i)
+    end
+
     local parentName
     for i = 1, C_Reputation.GetNumFactions() do
         local factionData = C_Reputation.GetFactionDataByIndex(i)
-        local name, isHeader, hasRep, isChild, factionID = factionData.name, factionData.isHeader, factionData.isHeaderWithRep, factionData.isChild, factionData.factionID
-        if isHeader and not hasRep and not isChild then
-            parentName = name
-        end
+        local name = factionData.name
+        local isHeader = factionData.isHeader
+        local hasRep = factionData.isHeaderWithRep
+        local isChild = factionData.isChild
+        local factionID = factionData.factionID
         if isHeader then
-            if isChild and parentName then
-                name = parentName .. " - " .. name
+            if isChild then
+                name = NORMAL_FONT_COLOR:WrapTextInColorCode(name)
+                inChildHeader = true
+                if hasRep then
+                    table.insert(headerTable.args, {
+                        name = name,
+                        type = "toggle",
+                        descStyle = "hidden",
+                        width = "full",
+                        handler = ReputationDB,
+                        get = function(self)
+                            return self.handler:IsSelectedFaction(factionID)
+                        end,
+                        set = function(self)
+                            self.handler:ToggleFaction(factionID)
+                        end
+                    })
+                else
+                    table.insert(headerTable.args, {
+                        name = name,
+                        type = "toggle",
+                        descStyle = "hidden",
+                        width = "full",
+                        disabled = true
+                    })
+                end
+            else
+                inChildHeader = false
+                headerTable = {
+                    name = name,
+                    type = "group",
+                    inline = false,
+                    args = {
+                        {
+                            name = name,
+                            type = "header",
+                            width = "full",
+                        }
+                    }
+                }
+                table.insert(args, headerTable)
             end
-            prevTable = {
-                name = name,
-                type = "group",
-                inline = true,
-                args = {}
-            }
-            table.insert(args, prevTable)
         else
-            table.insert(prevTable.args, {
+            if inChildHeader then
+                name = "    " .. name
+            end
+            table.insert(headerTable.args, {
                 name = name,
                 type = "toggle",
                 descStyle = "hidden",
@@ -74,10 +123,15 @@ local function CreateReputationOptions()
         end
     end
 
-    for i, parent in ipairs(args) do
+    --[[for i, parent in ipairs(args) do
         if parent.args and #parent.args == 0 then 
             table.remove(args, i) 
         end
+    end]]
+
+    for k in pairs(headerCollapsedState) do
+        C_Reputation.CollapseFactionHeader(k)
+        headerCollapsedState[k] = nil
     end
 
     return args
