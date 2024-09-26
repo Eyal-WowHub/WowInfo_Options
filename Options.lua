@@ -4,18 +4,14 @@ local Options = addon:NewObject("Options")
 local WowInfo = LibStub("Addon-1.0"):GetAddon("WowInfo")
 local AceOptions = LibStub("AceOptions-1.0")
 
-local MoneyDB = WowInfo:GetStorage("Money")
-local GuildDB = WowInfo:GetStorage("Guild")
-local FriendsDB = WowInfo:GetStorage("Friends")
-local ReputationDB = WowInfo:GetStorage("Reputation")
-local CurrencyDB = WowInfo:GetStorage("Currency")
-
 local L = addon.L
 
 local function CreateReputationOptions()
+    local Reputation = WowInfo:GetObject("Reputation")
+    local ReputationDB = Reputation.storage
+
     local args = {}
-    local headerCollapsedState = {}
-    local headerTable, inChildHeader
+    local headerTable, headerChildTable
 
     table.insert(args, {
         type = "description",
@@ -40,98 +36,62 @@ local function CreateReputationOptions()
         end
     })
 
-    local i = 1
-    local factionData = C_Reputation.GetFactionDataByIndex(i)
-
-    while factionData do
-        if factionData.isHeader and factionData.isCollapsed then
-            headerCollapsedState[i] = true
-            C_Reputation.ExpandFactionHeader(i)
-        end
-        i = i + 1
-        factionData = C_Reputation.GetFactionDataByIndex(i)
-    end
-
-    local parentName
-    for i = 1, C_Reputation.GetNumFactions() do
-        local factionData = C_Reputation.GetFactionDataByIndex(i)
-        local name = factionData.name
-        local isHeader = factionData.isHeader
-        local hasRep = factionData.isHeaderWithRep
-        local isChild = factionData.isChild
-        local factionID = factionData.factionID
-        if isHeader then
-            if isChild then
-                name = NORMAL_FONT_COLOR:WrapTextInColorCode(name)
-                inChildHeader = true
-                if hasRep then
-                    table.insert(headerTable.args, {
-                        name = name,
-                        type = "toggle",
-                        descStyle = "hidden",
-                        width = "full",
-                        handler = ReputationDB,
-                        get = function(self)
-                            return self.handler:IsSelectedFaction(factionID)
-                        end,
-                        set = function(self)
-                            self.handler:ToggleFaction(factionID)
-                        end
-                    })
+    for i = 1, Reputation:GetNumFactions() do
+        local factionData = Reputation:GetFactionDataByIndex(i)
+        if factionData then
+            local factionName = factionData.factionName
+            local factionID = factionData.factionID
+            if factionData.isHeader then
+                if factionData.isChild then
+                    headerChildTable = {
+                        name = factionName,
+                        type = "group",
+                        inline = true,
+                        args = {}
+                    }
+                    table.insert(headerTable.args, headerChildTable)
+                    if factionData.isHeaderWithRep then
+                        table.insert(headerChildTable.args, {
+                            name = factionName,
+                            type = "toggle",
+                            descStyle = "hidden",
+                            width = "full",
+                            handler = ReputationDB,
+                            get = function(self)
+                                return self.handler:IsSelectedFaction(factionID)
+                            end,
+                            set = function(self)
+                                self.handler:ToggleFaction(factionID)
+                            end
+                        })
+                    end
                 else
-                    table.insert(headerTable.args, {
-                        name = name,
-                        type = "toggle",
-                        descStyle = "hidden",
-                        width = "full",
-                        disabled = true
-                    })
+                    headerChildTable = nil
+                    headerTable = {
+                        name = factionName,
+                        type = "group",
+                        inline = false,
+                        args = {}
+                    }
+                    table.insert(args, headerTable)
                 end
             else
-                inChildHeader = false
-                headerTable = {
-                    name = name,
-                    type = "group",
-                    inline = false,
-                    args = {
-                        {
-                            name = name,
-                            type = "header",
-                            width = "full",
-                        }
-                    }
-                }
-                table.insert(args, headerTable)
+                local header = headerChildTable or headerTable
+                table.insert(header.args, {
+                    name = factionName,
+                    type = "toggle",
+                    descStyle = "hidden",
+                    width = "full",
+                    handler = ReputationDB,
+                    get = function(self)
+                        return self.handler:IsSelectedFaction(factionID)
+                    end,
+                    set = function(self)
+                        self.handler:ToggleFaction(factionID)
+                    end
+                })
             end
-        else
-            if inChildHeader then
-                name = "    " .. name
-            end
-            table.insert(headerTable.args, {
-                name = name,
-                type = "toggle",
-                descStyle = "hidden",
-                width = "full",
-                handler = ReputationDB,
-                get = function(self)
-                    return self.handler:IsSelectedFaction(factionID)
-                end,
-                set = function(self)
-                    self.handler:ToggleFaction(factionID)
-                end
-            })
         end
-    end
-
-    --[[for i, parent in ipairs(args) do
-        if parent.args and #parent.args == 0 then 
-            table.remove(args, i) 
-        end
-    end]]
-
-    for k in pairs(headerCollapsedState) do
-        C_Reputation.CollapseFactionHeader(k)
-        headerCollapsedState[k] = nil
     end
 
     return args
@@ -159,174 +119,190 @@ local function BuildOptions()
         },
     })
 
-    AceOptions:RegisterOptions({
-        type = "group",
-        name = L["Money"],
-        inline = true,
-        handler = MoneyDB,
-        args = {
-            {
-                type = "description",
-                name = L["Display the total money information for all characters in the tooltip of the Backpack."],
-            },
-            {
-                type = "separator"
-            },
-            {
-                type = "toggle",
-                name = L["Hide Connected Realms Names"],
-                descStyle = "hidden",
-                width = "full",
-                get = function(self)
-                    return MoneyDB:IsConnectedRealmsNamesHidden()
-                end,
-                set = function(self)
-                    MoneyDB:ToggleConnectedRealmsNames()
-                end
-            },
-            {
-                type = "toggle",
-                name = L["Show All Characters"],
-                descStyle = "hidden",
-                width = "full",
-                get = function(self)
-                    return MoneyDB:CanShowAllCharacters()
-                end,
-                set = function(self)
-                    MoneyDB:ToggleShowAllCharacters()
-                end
-            },
-            {
-                type = "description",
-                name = L["Show only characters that has more than specified amount of money:"],
-            },
-            {
-                type = "input",
-                name = "",
-                get = function(self)
-                    return tostring(MoneyDB:GetMinMoneyAmount())
-                end,
-                set = function(self, value)
-                    MoneyDB:SetMinMoneyAmount(value)
-                end,
-                validate = function(info, value)
-                    if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
-                        return false
+    do
+        local MoneyDB = WowInfo:GetStorage("Money")
+
+        AceOptions:RegisterOptions({
+            type = "group",
+            name = L["Money"],
+            inline = true,
+            handler = MoneyDB,
+            args = {
+                {
+                    type = "description",
+                    name = L["Display the total money information for all characters in the tooltip of the Backpack."],
+                },
+                {
+                    type = "separator"
+                },
+                {
+                    type = "toggle",
+                    name = L["Hide Connected Realms Names"],
+                    descStyle = "hidden",
+                    width = "full",
+                    get = function(self)
+                        return MoneyDB:IsConnectedRealmsNamesHidden()
+                    end,
+                    set = function(self)
+                        MoneyDB:ToggleConnectedRealmsNames()
                     end
-                    return true
-                end,
-                disabled = function(self)
-                    return MoneyDB:CanShowAllCharacters()
-                end
-            },
-            {
-                type = "newline"
-            },
-            {
-                type = "execute",
-                name = L["Reset Money Information"],
-                descStyle = "hidden",
-                width = "double",
-                func = function(self)
-                    MoneyDB:Reset()
-                end
+                },
+                {
+                    type = "toggle",
+                    name = L["Show All Characters"],
+                    descStyle = "hidden",
+                    width = "full",
+                    get = function(self)
+                        return MoneyDB:CanShowAllCharacters()
+                    end,
+                    set = function(self)
+                        MoneyDB:ToggleShowAllCharacters()
+                    end
+                },
+                {
+                    type = "description",
+                    name = L["Show only characters that has more than specified amount of money:"],
+                },
+                {
+                    type = "input",
+                    name = "",
+                    get = function(self)
+                        return tostring(MoneyDB:GetMinMoneyAmount())
+                    end,
+                    set = function(self, value)
+                        MoneyDB:SetMinMoneyAmount(value)
+                    end,
+                    validate = function(info, value)
+                        if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
+                            return false
+                        end
+                        return true
+                    end,
+                    disabled = function(self)
+                        return MoneyDB:CanShowAllCharacters()
+                    end
+                },
+                {
+                    type = "newline"
+                },
+                {
+                    type = "execute",
+                    name = L["Reset Money Information"],
+                    descStyle = "hidden",
+                    width = "double",
+                    func = function(self)
+                        MoneyDB:Reset()
+                    end
+                }
             }
-        }
-    })
+        })
+    end
 
-    AceOptions:RegisterOptions({
-        type = "group",
-        name = L["Guild & Communities"],
-        inline = true,
-        handler = GuildDB,
-        args = {
-            {
-                type = "description",
-                name = L["Display the status of your guild friends in the tooltip of the Guild & Communities button."]
-            },
-            {
-                type = "separator"
-            },
-            {
-                type = "range",
-                name = L["Maximum Friends Online"],
-                descStyle = "hidden",
-                width = "double",
-                step = 1,
-                min = 0,
-                max = 50,
-                get = function(self)
-                    return self.handler:GetMaxOnlineFriends()
-                end,
-                set = function(self, value)
-                    self.handler:SetMaxOnlineFriends(value)
-                end
-            },
-        }
-    })
+    do
+        local GuildDB = WowInfo:GetStorage("Guild")
 
-    AceOptions:RegisterOptions({
-        type = "group",
-        name = L["Social"],
-        inline = true,
-        handler = FriendsDB,
-        args = {
-            {
-                type = "description",
-                name = L["Display the status of your friends in the tooltip of the Social button."]
-            },
-            {
-                type = "separator"
-            },
-            {
-                type = "range",
-                name = L["Maximum Friends Online"],
-                width = "double",
-                descStyle = "hidden",
-                step = 1,
-                min = 0,
-                max = 50,
-                get = function(self)
-                    return self.handler:GetMaxOnlineFriends()
-                end,
-                set = function(self, value)
-                    self.handler:SetMaxOnlineFriends(value)
-                end
-            },
-        }
-    })
+        AceOptions:RegisterOptions({
+            type = "group",
+            name = L["Guild & Communities"],
+            inline = true,
+            handler = GuildDB,
+            args = {
+                {
+                    type = "description",
+                    name = L["Display the status of your guild friends in the tooltip of the Guild & Communities button."]
+                },
+                {
+                    type = "separator"
+                },
+                {
+                    type = "range",
+                    name = L["Maximum Friends Online"],
+                    descStyle = "hidden",
+                    width = "double",
+                    step = 1,
+                    min = 0,
+                    max = 50,
+                    get = function(self)
+                        return self.handler:GetMaxOnlineFriends()
+                    end,
+                    set = function(self, value)
+                        self.handler:SetMaxOnlineFriends(value)
+                    end
+                },
+            }
+        })
+    end
 
+    do
+        local FriendsDB = WowInfo:GetStorage("Friends")
+
+        AceOptions:RegisterOptions({
+            type = "group",
+            name = L["Social"],
+            inline = true,
+            handler = FriendsDB,
+            args = {
+                {
+                    type = "description",
+                    name = L["Display the status of your friends in the tooltip of the Social button."]
+                },
+                {
+                    type = "separator"
+                },
+                {
+                    type = "range",
+                    name = L["Maximum Friends Online"],
+                    width = "double",
+                    descStyle = "hidden",
+                    step = 1,
+                    min = 0,
+                    max = 50,
+                    get = function(self)
+                        return self.handler:GetMaxOnlineFriends()
+                    end,
+                    set = function(self, value)
+                        self.handler:SetMaxOnlineFriends(value)
+                    end
+                },
+            }
+        })
+    end
+    
     AceOptions:RegisterOptions({
         name = L["Reputation"],
         type = "group",
         args = CreateReputationOptions()
     })
 
-    AceOptions:RegisterOptions({
-        type = "group",
-        name = L["Currency"],
-        inline = true,
-        handler = CurrencyDB,
-        args = {
-            {
-                type = "description",
-                name = L["Display the currency amount per character in the tooltip of the Currency Tab."]
-            },
-            {
-                type = "separator"
-            },
-            {
-                type = "execute",
-                name = L["Reset Currency Data"],
-                descStyle = "hidden",
-                width = "double",
-                func = function(self)
-                    CurrencyDB:Reset()
-                end
-            }
-        }
-    })
+    do
+        local CurrencyDB = WowInfo:GetStorage("Currency")
 
+        AceOptions:RegisterOptions({
+            type = "group",
+            name = L["Currency"],
+            inline = true,
+            handler = CurrencyDB,
+            args = {
+                {
+                    type = "description",
+                    name = L["Display the currency amount per character in the tooltip of the Currency Tab."]
+                },
+                {
+                    type = "separator"
+                },
+                {
+                    type = "execute",
+                    name = L["Reset Currency Data"],
+                    descStyle = "hidden",
+                    width = "double",
+                    func = function(self)
+                        CurrencyDB:Reset()
+                    end
+                }
+            }
+        })
+    end
+    
     BuildOptions = function() end
 end
 
