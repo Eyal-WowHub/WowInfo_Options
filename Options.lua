@@ -37,12 +37,12 @@ local function CreateReputationOptions()
     })
 
     for i = 1, Reputation:GetNumFactions() do
-        local factionData = Reputation:GetFactionDataByIndex(i)
-        if factionData then
-            local factionName = factionData.factionName
-            local factionID = factionData.factionID
-            if factionData.isHeader then
-                if factionData.isChild then
+        local info = Reputation:GetFactionInfoByIndex(i)
+        if info then
+            local factionName = info.factionName
+            local factionID = info.factionID
+            if info.isHeader then
+                if info.isChild then
                     headerChildTable = {
                         name = factionName,
                         type = "group",
@@ -50,7 +50,7 @@ local function CreateReputationOptions()
                         args = {}
                     }
                     table.insert(headerTable.args, headerChildTable)
-                    if factionData.isHeaderWithRep then
+                    if info.isHeaderWithRep then
                         table.insert(headerChildTable.args, {
                             name = factionName,
                             type = "toggle",
