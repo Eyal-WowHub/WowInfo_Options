@@ -275,13 +275,12 @@ local function BuildOptions()
     })
 
     do
-        local CurrencyDB = WowInfo:GetStorage("Currency")
+        local Currency = WowInfo:GetObject("Currency")
 
         AceOptions:RegisterOptions({
             type = "group",
             name = L["Currency"],
             inline = true,
-            handler = CurrencyDB,
             args = {
                 {
                     type = "description",
@@ -296,7 +295,7 @@ local function BuildOptions()
                     descStyle = "hidden",
                     width = "double",
                     func = function(self)
-                        CurrencyDB:Reset()
+                        Currency:Reset()
                     end
                 }
             }
