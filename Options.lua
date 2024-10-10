@@ -37,12 +37,12 @@ local function CreateReputationOptions()
     })
 
     for i = 1, Reputation:GetNumFactions() do
-        local info = Reputation:GetFactionInfoByIndex(i)
-        if info then
-            local factionName = info.factionName
-            local factionID = info.factionID
-            if info.isHeader then
-                if info.isChild then
+        local faction = Reputation:GetFactionInfoByIndex(i)
+        if faction then
+            local factionName = faction.name
+            local factionID = faction.ID
+            if faction.isHeader then
+                if faction.isChild then
                     headerChildTable = {
                         name = factionName,
                         type = "group",
@@ -50,7 +50,7 @@ local function CreateReputationOptions()
                         args = {}
                     }
                     table.insert(headerTable.args, headerChildTable)
-                    if info.isHeaderWithRep then
+                    if faction.isHeaderWithRep then
                         table.insert(headerChildTable.args, {
                             name = factionName,
                             type = "toggle",
@@ -275,7 +275,7 @@ local function BuildOptions()
     })
 
     do
-        local Currency = WowInfo:GetObject("Currency")
+        local CurrencyDB = WowInfo:GetStorage("Currency")
 
         AceOptions:RegisterOptions({
             type = "group",
@@ -295,7 +295,7 @@ local function BuildOptions()
                     descStyle = "hidden",
                     width = "double",
                     func = function(self)
-                        Currency:Reset()
+                        CurrencyDB:Reset()
                     end
                 }
             }
