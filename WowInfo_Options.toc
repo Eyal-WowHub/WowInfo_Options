@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 110005
 
 ## Title: Wow|cff40a5f7Info|r: Options
 ## Notes: Provides the UI to configure WowInfo. 
