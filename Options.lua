@@ -1,7 +1,6 @@
 local _, addon = ...
 local Options = addon:NewObject("Options")
 
-local WowInfo = LibStub("Addon-1.0"):GetAddon("WowInfo")
 local AceOptions = LibStub("AceOptions-1.0")
 
 local L = addon.L
