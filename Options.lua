@@ -96,7 +96,7 @@ local function CreateReputationOptions()
     return args
 end
 
-local function BuildOptions()
+function Options:OnInitializing()
     AceOptions:RegisterOptions({
         name = "WowInfo",
         type = "group",
@@ -300,10 +300,10 @@ local function BuildOptions()
             }
         })
     end
-    
-    BuildOptions = function() end
 end
 
-function Options:OnInitializing()
-    BuildOptions()
-end
+WowInfo:RegisterEvent("WOWINFO_OPTIONS_OPENED", function()
+    AceOptions:Open()
+end)
+
+
