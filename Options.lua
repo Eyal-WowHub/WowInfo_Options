@@ -4,13 +4,14 @@ local Options = addon:NewObject("Options")
 local L = addon.L
 
 function Options:OnInitializing()
-    local category = Settings.RegisterVerticalLayoutCategory(self:GetName())
+    local category = Settings.RegisterVerticalLayoutCategory(WowInfo:GetName())
 
     addon.OptionsID = category:GetID()
 
     do
-        local frame = CreateFrame("Frame")
-        local subCategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, frame, L["Currency"])
+        local subCategory, layout = Settings.RegisterVerticalLayoutSubcategory(category, L["Currency"])
+        local initializer = CreateSettingsListSectionHeaderInitializer("Description ...")
+        layout:AddInitializer(initializer)
     end
 
     do
