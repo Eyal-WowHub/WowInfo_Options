@@ -20,6 +20,6 @@ L["Reputation"] = "Reputation"
 L["Display the reputation status for the tracked factions in the tooltip of the Character Info button."] = "Display the reputation status for the tracked factions in the tooltip of the Character Info button."
 L["Always Show Paragon Rewards"] = "Always Show Paragon Rewards"
 
-L["Currency"] = "Currency"
+L["Currency Tracker"] = "Currency Tracker"
 L["Display the currency amount per character in the tooltip of the Currency Tab."] = "Display the currency amount per character in the tooltip of the Currency Tab."
 L["Reset Currency Data"] = "Reset Currency Data"

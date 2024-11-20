@@ -9,9 +9,21 @@ function Options:OnInitializing()
     addon.OptionsID = category:GetID()
 
     do
-        local subCategory, layout = Settings.RegisterVerticalLayoutSubcategory(category, L["Currency"])
-        local initializer = CreateSettingsListSectionHeaderInitializer("Description ...")
-        layout:AddInitializer(initializer)
+        local Storage = WowInfo:GetStorage("CurrencyTracker")
+        local subCategory, layout = Settings.RegisterVerticalLayoutSubcategory(category, L["Currency Tracker"])
+
+        local addSearchTags = false;
+        local initializer = CreateSettingsButtonInitializer(
+            "", 
+            L["Reset Currency Data"], 
+            Storage.Reset, 
+            nil, 
+            addSearchTags)
+
+		layout:AddInitializer(initializer)
+
+        --local initializer = CreateSettingsListSectionHeaderInitializer("Description ...")
+        --layout:AddInitializer(initializer)
     end
 
     do
