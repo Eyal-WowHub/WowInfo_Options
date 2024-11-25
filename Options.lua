@@ -27,8 +27,30 @@ function Options:OnInitializing()
     end
 
     do
-        local frame = CreateFrame("Frame")
-        local subCategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, frame, L["Guild & Communities"])
+        local Storage = WowInfo:GetStorage("Guild")
+        local subCategory, layout = Settings.RegisterVerticalLayoutSubcategory(category, L["Guild Friends"])
+
+        do
+            local setting = Settings.RegisterProxySetting(
+                subCategory, 
+                "WOWINFO_MAX_ONLINE_FRIENDS",
+                Settings.VarType.Number, 
+                L["Maximum Friends Online"],
+                Storage:GetDefault("maxOnlineFriends"), 
+                Storage.GetMaxOnlineFriends, 
+                Storage.SetMaxOnlineFriends)
+
+            local minValue, maxValue, step = 0, 50, 1
+            
+            local options = Settings.CreateSliderOptions(minValue, maxValue, step)
+            options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
+        
+            Settings.CreateSlider(subCategory, setting, options)
+        end
+
+        
+
+        
     end
 
     do

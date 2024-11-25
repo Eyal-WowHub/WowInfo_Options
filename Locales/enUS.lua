@@ -9,7 +9,7 @@ L["Show All Characters"] = "Show All Characters"
 L["Show only characters that has more than specified amount of money:"] = "\nShow only characters that has more than specified amount of |TInterface\\MoneyFrame\\UI-GoldIcon:0:0:0:-1|t money:"
 L["Reset Money Information"] = "Reset Money Information"
 
-L["Guild & Communities"] = "Guild & Communities"
+L["Guild Friends"] = "Guild Friends"
 L["Display the status of your guild friends in the tooltip of the Guild & Communities button."] = "Display the status of your guild friends in the tooltip of the Guild & Communities button."
 L["Maximum Friends Online"] = "Maximum Friends Online"
 
