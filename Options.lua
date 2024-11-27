@@ -9,14 +9,14 @@ function Options:OnInitializing()
     addon.OptionsID = category:GetID()
 
     do
-        local Storage = WowInfo:GetStorage("CurrencyTracker")
+        local storage = WowInfo:GetStorage("CurrencyTracker")
         local subCategory, layout = Settings.RegisterVerticalLayoutSubcategory(category, L["Currency Tracker"])
 
         local addSearchTags = false;
         local initializer = CreateSettingsButtonInitializer(
             "", 
             L["Reset Currency Data"], 
-            Storage.Reset, 
+            storage.Reset, 
             nil, 
             addSearchTags)
 
@@ -27,7 +27,7 @@ function Options:OnInitializing()
     end
 
     do
-        local Storage = WowInfo:GetStorage("Guild")
+        local storage = WowInfo:GetStorage("Guild")
         local subCategory, layout = Settings.RegisterVerticalLayoutSubcategory(category, L["Guild Friends"])
 
         do
@@ -36,9 +36,9 @@ function Options:OnInitializing()
                 "WOWINFO_MAX_ONLINE_FRIENDS",
                 Settings.VarType.Number, 
                 L["Maximum Friends Online"],
-                Storage:GetDefault("maxOnlineFriends"), 
-                Storage.GetMaxOnlineFriends, 
-                Storage.SetMaxOnlineFriends)
+                storage:GetDefault("maxOnlineFriends"), 
+                storage.GetMaxOnlineFriends, 
+                storage.SetMaxOnlineFriends)
 
             local minValue, maxValue, step = 0, 50, 1
             
@@ -47,10 +47,6 @@ function Options:OnInitializing()
         
             Settings.CreateSlider(subCategory, setting, options)
         end
-
-        
-
-        
     end
 
     do
