@@ -4,6 +4,49 @@ local Options = addon:NewObject("Options")
 local L = addon.L
 
 function Options:OnInitializing()
+    local settings = {
+        name = WowInfo:GetName(),
+        type = "vertical-layout",
+        props = {
+            {
+                name = L["Currency Tracker"],
+                type = "vertical-layout",
+                props = {
+                    {
+                        name = L["Reset Currency Data"],
+                        type = "button",
+                        click = storage.Reset
+                    }
+                }
+            },
+            {
+                name = L["Guild Friends"],
+                props = {}
+            },
+            {
+                name = L["Money"],
+                props = {}
+            },
+            {
+                name = L["Reputation"],
+                props = {}
+            },
+            {
+                name = L["Social"],
+                props = {}
+            }
+            --[[{
+                name = L["Tooltips"],
+                props = {}
+            },
+            {
+                name = L["Profiles"],
+                props = {}
+            }]]
+        }
+    }
+
+
     local category = Settings.RegisterVerticalLayoutCategory(WowInfo:GetName())
 
     addon.OptionsID = category:GetID()
@@ -14,10 +57,10 @@ function Options:OnInitializing()
 
         local addSearchTags = false;
         local initializer = CreateSettingsButtonInitializer(
-            "", 
-            L["Reset Currency Data"], 
-            storage.Reset, 
-            nil, 
+            "",
+            L["Reset Currency Data"],
+            storage.Reset,
+            nil,
             addSearchTags)
 
 		layout:AddInitializer(initializer)
@@ -32,19 +75,19 @@ function Options:OnInitializing()
 
         do
             local setting = Settings.RegisterProxySetting(
-                subCategory, 
+                subCategory,
                 "WOWINFO_MAX_ONLINE_FRIENDS",
-                Settings.VarType.Number, 
+                Settings.VarType.Number,
                 L["Maximum Friends Online"],
-                storage:GetDefault("maxOnlineFriends"), 
-                storage.GetMaxOnlineFriends, 
+                storage:GetDefault("maxOnlineFriends"),
+                storage.GetMaxOnlineFriends,
                 storage.SetMaxOnlineFriends)
 
             local minValue, maxValue, step = 0, 50, 1
-            
+
             local options = Settings.CreateSliderOptions(minValue, maxValue, step)
             options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
-        
+
             Settings.CreateSlider(subCategory, setting, options)
         end
     end
@@ -52,6 +95,8 @@ function Options:OnInitializing()
     do
         local frame = CreateFrame("Frame")
         local subCategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, frame, L["Money"])
+
+        
     end
 
     do
