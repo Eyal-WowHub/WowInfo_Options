@@ -1,9 +1,13 @@
 local _, addon = ...
 local Options = addon:NewObject("Options")
 
+local SG = LibStub("SettingsGenerator-1.0")
+
 local L = addon.L
 
 function Options:OnInitializing()
+    local storage = WowInfo:GetStorage("CurrencyTracker")
+
     local settings = {
         name = WowInfo:GetName(),
         type = "vertical-layout",
@@ -21,33 +25,40 @@ function Options:OnInitializing()
             },
             {
                 name = L["Guild Friends"],
+                type = "vertical-layout",
                 props = {}
             },
             {
                 name = L["Money"],
+                type = "vertical-layout",
                 props = {}
             },
             {
                 name = L["Reputation"],
+                type = "vertical-layout",
                 props = {}
             },
             {
                 name = L["Social"],
+                type = "vertical-layout",
                 props = {}
-            }
-            --[[{
+            },
+            {
                 name = L["Tooltips"],
+                type = "vertical-layout",
                 props = {}
             },
             {
                 name = L["Profiles"],
+                type = "vertical-layout",
                 props = {}
-            }]]
+            }
         }
     }
 
+    addon.OptionsID = SG:Generate(settings)
 
-    local category = Settings.RegisterVerticalLayoutCategory(WowInfo:GetName())
+    --[[local category = Settings.RegisterVerticalLayoutCategory(WowInfo:GetName())
 
     addon.OptionsID = category:GetID()
 
@@ -111,7 +122,7 @@ function Options:OnInitializing()
     end
 
     -- TODO: Allow to sort and disable tooltips.
-    --[[do
+    do
         local frame = CreateFrame("Frame")
 
         local subCategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, frame, "Tooltips")
@@ -122,11 +133,21 @@ function Options:OnInitializing()
         local frame = CreateFrame("Frame")
 
         local subCategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, frame, "Profiles")
-    end]]
+    end
 
-    Settings.RegisterAddOnCategory(category)
+    Settings.RegisterAddOnCategory(category)]]
 end
 
-WowInfo:RegisterEvent("WOWINFO_OPTIONS_OPENED", function()
-    Settings.OpenToCategory(addon.OptionsID)
-end)
+do
+    local OPTIONS_FAILURE_MESSAGE = "Failed to open '%s'."
+
+    WowInfo:RegisterEvent("WOWINFO_OPTIONS_OPENED", function()
+        if addon.OptionsID then
+            Settings.OpenToCategory(addon.OptionsID)
+        else
+            WowInfo:Warn(OPTIONS_FAILURE_MESSAGE:format(addon:GetName()))
+        end
+    end)
+end
+
+

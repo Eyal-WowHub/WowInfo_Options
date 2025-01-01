@@ -7,6 +7,8 @@
 
 ## LoadOnDemand: 1
 
+Libs\SettingsGenerator\SettingsGenerator.xml
+
 Locales\enUS.lua
 
 Main.lua
