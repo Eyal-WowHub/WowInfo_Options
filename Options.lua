@@ -6,7 +6,8 @@ local SG = LibStub("SettingsGenerator-1.0")
 local L = addon.L
 
 function Options:OnInitializing()
-    local storage = WowInfo:GetStorage("CurrencyTracker")
+    local currencyTracker = WowInfo:GetStorage("CurrencyTracker")
+    local guildFriends = WowInfo:GetStorage("GuildFriends")
 
     local settings = {
         name = WowInfo:GetName(),
@@ -19,14 +20,27 @@ function Options:OnInitializing()
                     {
                         name = L["Reset Currency Data"],
                         type = "button",
-                        click = storage.Reset
+                        click = currencyTracker.Reset
                     }
                 }
             },
             {
                 name = L["Guild Friends"],
                 type = "vertical-layout",
-                props = {}
+                props = {
+                    {
+                        name = L["Maximum Friends Online"],
+                        type = "slider",
+                        var = {"WOWINFO_MAX_ONLINE_GUILD_FRIENDS", Settings.VarType.Number},
+                        default = 20,
+                        min = 0,
+                        max = 50,
+                        steps = 1,
+                        get = guildFriends.GetMaxOnlineFriends,
+                        set = guildFriends.SetMaxOnlineFriends,
+                        label = {MinimalSliderWithSteppersMixin.Label.Right}
+                    }
+                }
             },
             {
                 name = L["Money"],
