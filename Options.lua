@@ -1,7 +1,7 @@
 local _, addon = ...
 local Options = addon:NewObject("Options")
 
-local SG = LibStub("SettingsGenerator-1.0")
+local Config = LibStub("AddonConfig-1.0")
 
 local L = addon.L
 
@@ -31,14 +31,15 @@ function Options:OnInitializing()
                     {
                         name = L["Maximum Friends Online"],
                         type = "slider",
-                        var = {"WOWINFO_MAX_ONLINE_GUILD_FRIENDS", Settings.VarType.Number},
                         default = 20,
-                        min = 0,
-                        max = 50,
-                        steps = 1,
                         get = guildFriends.GetMaxOnlineFriends,
                         set = guildFriends.SetMaxOnlineFriends,
-                        label = {MinimalSliderWithSteppersMixin.Label.Right}
+                        label = {MinimalSliderWithSteppersMixin.Label.Right},
+                        options = {
+                            min = 0,
+                            max = 50,
+                            steps = 1
+                        }
                     }
                 }
             },
@@ -70,7 +71,7 @@ function Options:OnInitializing()
         }
     }
 
-    addon.OptionsID = SG:Generate(settings)
+    addon.OptionsID = Config:Generate(settings)
 
     --[[local category = Settings.RegisterVerticalLayoutCategory(WowInfo:GetName())
 

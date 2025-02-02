@@ -7,7 +7,7 @@
 
 ## LoadOnDemand: 1
 
-Libs\SettingsGenerator\SettingsGenerator.xml
+Libs\AddonConfig\AddonConfig.xml
 
 Locales\enUS.lua
 
