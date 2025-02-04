@@ -34,11 +34,11 @@ function Options:OnInitializing()
                         default = 20,
                         get = guildFriends.GetMaxOnlineFriends,
                         set = guildFriends.SetMaxOnlineFriends,
-                        label = {MinimalSliderWithSteppersMixin.Label.Right},
                         options = {
                             min = 0,
                             max = 50,
-                            steps = 1
+                            steps = 1,
+                            label = MinimalSliderWithSteppersMixin.Label.Right
                         }
                     }
                 }
