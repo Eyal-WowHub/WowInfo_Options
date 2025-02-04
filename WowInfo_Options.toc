@@ -7,10 +7,7 @@
 
 ## LoadOnDemand: 1
 
-Libs\AceGUI-3.0\AceGUI-3.0.xml
-Libs\AceConfig-3.0\AceConfig-3.0.xml
-Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
-Libs\AceOptions\AceOptions.lua
+Libs\AddonConfig\AddonConfig.xml
 
 Locales\enUS.lua
 
