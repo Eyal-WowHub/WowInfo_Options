@@ -6,7 +6,7 @@ L["Money"] = "Money"
 L["Display the total money information for all characters in the tooltip of the Backpack."] = "Display the total money information for all characters in the tooltip of the Backpack."
 L["Hide Connected Realms Names"] = "Hide Connected Realms Names"
 L["Show All Characters"] = "Show All Characters"
-L["Min Amount of Gold Required"] = "Min Amount of |TInterface\\MoneyFrame\\UI-GoldIcon:0:0:0:-1|t Required"
+L["Min Amount of Gold Required"] = "Min Amount of Gold Required"
 L["Reset Money Information"] = "Reset Money Information"
 
 L["Guild Friends"] = "Guild Friends"
