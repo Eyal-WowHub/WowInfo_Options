@@ -42,7 +42,36 @@ function Options:OnInitializing()
         },
         {
             name = L["Money"],
-            layout = {}
+            handler = WowInfo:GetStorage("Money"),
+            layout = {
+                {
+                    name = L["Hide Connected Realms Names"],
+                    type = "checkbox",
+                    default = true,
+                    get = function(self) return self:IsConnectedRealmsNamesHidden() end,
+                    set = function(self) self:ToggleConnectedRealmsNames() end
+                },
+                {
+                    name = L["Show All Characters"],
+                    type = "checkbox",
+                    default = false,
+                    get = function(self) return self:CanShowAllCharacters() end,
+                    set = function(self) self:ToggleShowAllCharacters() end
+                },
+                {
+                    name = L["Min Amount of Gold Required"],
+                    type = "editbox",
+                    get = function(self) return tostring(self:GetMinMoneyAmount()) end,
+                    set = function(self, value) self:SetMinMoneyAmount(value) end,
+                    --[[validate = function(info, value)
+                        if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
+                            return false
+                        end
+                        return true
+                    end,]]
+                    disabled = function(self) return self:CanShowAllCharacters() end
+                }
+            }
         },
         {
             name = L["Reputation"],
