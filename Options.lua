@@ -63,12 +63,12 @@ function Options:OnInitializing()
                     type = "editbox",
                     get = function(self) return tostring(self:GetMinMoneyAmount()) end,
                     set = function(self, value) self:SetMinMoneyAmount(value) end,
-                    --[[validate = function(info, value)
+                    validate = function(value)
                         if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
                             return false
                         end
                         return true
-                    end,]]
+                    end,
                     disabled = function(self) return self:CanShowAllCharacters() end
                 }
             }
