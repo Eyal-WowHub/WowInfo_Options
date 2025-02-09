@@ -70,6 +70,11 @@ function Options:OnInitializing()
                         return true
                     end,
                     disabled = function(self) return self:CanShowAllCharacters() end
+                },
+                {
+                    name = L["Reset Money Information"],
+                    type = "button",
+                    click = function(self) self:Reset() end
                 }
             }
         },
