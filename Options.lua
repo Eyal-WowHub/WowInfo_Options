@@ -61,7 +61,7 @@ function Options:OnInitializing()
                 {
                     name = L["Min Amount of Gold Required"],
                     type = "editbox",
-                    get = function(self) return tostring(self:GetMinMoneyAmount()) end,
+                    get = function(self) return self:GetMinMoneyAmount() end,
                     set = function(self, value) self:SetMinMoneyAmount(value) end,
                     validate = function(value)
                         if value ~= nil and value ~= "" and (not tonumber(value) or tonumber(value) >= 2^31) then
