@@ -84,7 +84,35 @@ function Options:OnInitializing()
         },
         {
             name = L["Social"],
-            layout = {}
+            handler = WowInfo:GetStorage("Friends"),
+            layout = {
+                {
+                    name = L["Maximum Battle.Net Friends Online"],
+                    type = "slider",
+                    default = 10,
+                    get = function(self) return self:GetMaxOnlineFriends("BN") end,
+                    set = function(self, value) self:SetMaxOnlineFriends("BN", value) end,
+                    options = {
+                        min = 0,
+                        max = 20,
+                        steps = 1,
+                        label = MinimalSliderWithSteppersMixin.Label.Right
+                    }
+                },
+                {
+                    name = L["Maximum WoW Friends Online"],
+                    type = "slider",
+                    default = 10,
+                    get = function(self) return self:GetMaxOnlineFriends("WOW") end,
+                    set = function(self, value) self:SetMaxOnlineFriends("WOW", value) end,
+                    options = {
+                        min = 0,
+                        max = 20,
+                        steps = 1,
+                        label = MinimalSliderWithSteppersMixin.Label.Right
+                    }
+                }
+            }
         },
         {
             name = L["Tooltips"],
