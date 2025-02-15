@@ -80,7 +80,54 @@ function Options:OnInitializing()
         },
         {
             name = L["Reputation"],
-            layout = {}
+            handler = WowInfo:GetStorage("Reputation"),
+            layout = function(template)
+                local Reputation = WowInfo:GetObject("Reputation")
+
+                table.insert(template, {
+                    type = "checkbox",
+                    name = L["Always Show Paragon Rewards"],
+                    default = true,
+                    get = function(self) return self:GetAlwaysShowParagon() end,
+                    set = function(self) self:ToggleAlwaysShowParagon() end
+                })
+
+                for i = 1, Reputation:GetNumFactions() do
+                    local faction = Reputation:GetFactionInfoByIndex(i)
+                    if faction then
+                        local factionName = faction.name
+                        local factionID = faction.ID
+                        if faction.isHeader then
+                            if faction.isChild then
+                                factionName = "       " .. factionName
+                            end
+                            table.insert(template, {
+                                name = factionName,
+                                type = "header",
+                            })
+                            if faction.isHeaderWithRep then
+                                table.insert(template, {
+                                    name = faction.name,
+                                    type = "checkbox",
+                                    default = false,
+                                    get = function(self) return self:IsSelectedFaction(factionID) end,
+                                    set = function(self) self:ToggleFaction(factionID) end
+                                })
+                            end
+                        else
+                            table.insert(template, {
+                                name = factionName,
+                                type = "checkbox",
+                                default = false,
+                                get = function(self) return self:IsSelectedFaction(factionID) end,
+                                set = function(self) self:ToggleFaction(factionID) end
+                            })
+                        end
+                    end
+                end
+
+                return template
+            end,
         },
         {
             name = L["Social"],
