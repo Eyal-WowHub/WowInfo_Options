@@ -81,15 +81,20 @@ function Options:OnInitializing()
         {
             name = L["Reputation"],
             handler = WowInfo:GetStorage("Reputation"),
-            layout = function(template)
+            init = function(props)
                 local Reputation = WowInfo:GetObject("Reputation")
 
-                table.insert(template, {
-                    type = "checkbox",
+                table.insert(props, {
                     name = L["Always Show Paragon Rewards"],
+                    type = "checkbox",
                     default = true,
                     get = function(self) return self:GetAlwaysShowParagon() end,
                     set = function(self) self:ToggleAlwaysShowParagon() end
+                })
+
+                table.insert(props, {
+                    name = L["Factions"],
+                    type = "header",
                 })
 
                 for i = 1, Reputation:GetNumFactions() do
@@ -97,25 +102,8 @@ function Options:OnInitializing()
                     if faction then
                         local factionName = faction.name
                         local factionID = faction.ID
-                        if faction.isHeader then
-                            if faction.isChild then
-                                factionName = "       " .. factionName
-                            end
-                            table.insert(template, {
-                                name = factionName,
-                                type = "header",
-                            })
-                            if faction.isHeaderWithRep then
-                                table.insert(template, {
-                                    name = faction.name,
-                                    type = "checkbox",
-                                    default = false,
-                                    get = function(self) return self:IsSelectedFaction(factionID) end,
-                                    set = function(self) self:ToggleFaction(factionID) end
-                                })
-                            end
-                        else
-                            table.insert(template, {
+                        if not faction.isHeader or isHeaderWithRep then
+                            table.insert(props, {
                                 name = factionName,
                                 type = "checkbox",
                                 default = false,
@@ -125,8 +113,6 @@ function Options:OnInitializing()
                         end
                     end
                 end
-
-                return template
             end,
         },
         {
@@ -161,14 +147,14 @@ function Options:OnInitializing()
                 }
             }
         },
-        {
+        --[[{
             name = L["Tooltips"],
             layout = {}
         },
         {
             name = L["Profiles"],
             layout = {}
-        }
+        }]]
     }
 
     addon.OptionsID = Config:Generate(settings, "vertical-layout")

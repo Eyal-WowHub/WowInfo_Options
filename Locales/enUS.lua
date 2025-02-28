@@ -19,6 +19,7 @@ L["Maximum Battle.Net Friends Online"] = "Maximum Battle.Net Friends Online"
 L["Maximum WoW Friends Online"] = "Maximum WoW Friends Online"
 
 L["Reputation"] = "Reputation"
+L["Factions"] = "Factions"
 L["Display the reputation status for the tracked factions in the tooltip of the Character Info button."] = "Display the reputation status for the tracked factions in the tooltip of the Character Info button."
 L["Always Show Paragon Rewards"] = "Always Show Paragon Rewards"
 
