@@ -6,6 +6,7 @@
 ## Author: Eyal Alon
 
 ## LoadOnDemand: 1
+## RequiredDeps: WowInfo
 
 Libs\AddonConfig\AddonConfig.xml
 
