@@ -28,5 +28,6 @@ L["Display the currency amount per character in the tooltip of the Currency Tab.
 L["Reset Currency Data"] = "Reset Currency Data"
 
 L["Tooltips"] = "Tooltips"
+L["Enabled Tooltips"] = "Enabled Tooltips"
 
 L["Profiles"] = "Profiles"

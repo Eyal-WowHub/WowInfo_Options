@@ -149,11 +149,30 @@ function Options:OnInitializing()
                 }
             }
         },
-        --[[{
-            name = L["Tooltips"],
-            layout = {}
-        },
         {
+            name = L["Tooltips"],
+            handler = WowInfo:GetStorage("TooltipManager"),
+            layout = function(tbl)
+                table.insert(tbl, {
+                    name = L["Enabled Tooltips"],
+                    type = "header",
+                })
+
+                local TooltipManager = WowInfo:GetStorage("TooltipManager")
+
+                for name in TooltipManager:IterableEnabledTooltips() do
+                    local uiName = name:match("^(.-)%.Tooltip$")
+                    table.insert(tbl, {
+                        name = uiName,
+                        type = "checkbox",
+                        default = false,
+                        get = function(self) return self:IsEnabled(name) end,
+                        set = function(self) self:ToggleTooltip(name) end
+                    })
+                end
+            end
+        },
+        --[[{
             name = L["Profiles"],
             layout = {}
         }]]
