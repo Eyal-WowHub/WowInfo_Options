@@ -81,10 +81,10 @@ function Options:OnInitializing()
         {
             name = L["Reputation"],
             handler = WowInfo:GetStorage("Reputation"),
-            init = function(props)
+            layout = function(tbl)
                 local Reputation = WowInfo:GetObject("Reputation")
 
-                table.insert(props, {
+                table.insert(tbl, {
                     name = L["Always Show Paragon Rewards"],
                     type = "checkbox",
                     default = true,
@@ -92,18 +92,20 @@ function Options:OnInitializing()
                     set = function(self) self:ToggleAlwaysShowParagon() end
                 })
 
-                table.insert(props, {
+                table.insert(tbl, {
                     name = L["Factions"],
                     type = "header",
                 })
 
                 for i = 1, Reputation:GetNumFactions() do
                     local faction = Reputation:GetFactionInfoByIndex(i)
+
                     if faction then
                         local factionName = faction.name
                         local factionID = faction.ID
+                        
                         if not faction.isHeader or isHeaderWithRep then
-                            table.insert(props, {
+                            table.insert(tbl, {
                                 name = factionName,
                                 type = "checkbox",
                                 default = false,
