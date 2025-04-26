@@ -184,7 +184,7 @@ end
 do
     local OPTIONS_FAILURE_MESSAGE = "Failed to open '%s'."
 
-    WowInfo:RegisterEvent("WOWINFO_OPTIONS_OPENED", function()
+    WowInfo:RegisterEvent("WOWINFO_OPTIONS_LOADED", function()
         if addon.OptionsID then
             Settings.OpenToCategory(addon.OptionsID)
         else
